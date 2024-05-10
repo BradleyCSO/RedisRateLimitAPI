@@ -1,7 +1,6 @@
-﻿namespace RedisRateLimitAPI.Services
+﻿namespace RedisRateLimitAPI.Services;
+
+public interface IRedisRateLimitService
 {
-    public interface IRedisRateLimitService
-    {
-        Task<bool?> IsRequestRateLimitedAsync(string endpoint);
-    }
+    Task<bool?> IsRequestRateLimitedAsync(string endpoint);
 }
