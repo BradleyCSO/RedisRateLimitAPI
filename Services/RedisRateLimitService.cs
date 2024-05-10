@@ -38,7 +38,7 @@ public class RedisRateLimitService(ConnectionMultiplexer connection) : IRedisRat
         }
         finally
         {
-            //await connection.CloseAsync();
+            await connection.CloseAsync();
         }
 
         return false;
