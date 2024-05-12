@@ -1,25 +1,22 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
-WORKDIR /app
-
+# Use the Microsoft's official build image.
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
+
+# Install Clang, required for AOT compilation.
+RUN apt-get update && \
+    apt-get install -y clang zlib1g-dev
+
+# Set the working directory in the container.
 WORKDIR /src
-COPY ["RedisRateLimitAPI.csproj", "."]
-RUN dotnet restore "./././RedisRateLimitAPI.csproj"
+
+# Copy csproj and restore any dependencies (via NuGet).
+COPY *.csproj .
+RUN dotnet restore
+
+# Copy the project files and build our release.
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "./RedisRateLimitAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet publish -c Release -o /app -r linux-x64 --self-contained true /p:PublishAot=true
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./RedisRateLimitAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
+# Generate the runtime image.
+FROM mcr.microsoft.com/dotnet/runtime-deps:8.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
-
-EXPOSE 80
-EXPOSE 443
-
-ENTRYPOINT ["dotnet", "RedisRateLimitAPI.dll"]
+COPY --from=build /app .
