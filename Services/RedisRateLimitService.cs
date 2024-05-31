@@ -29,12 +29,10 @@ public class RedisRateLimitService(ConnectionMultiplexer connection) : IRedisRat
                 return true;
 
             // Update the count in Redis
-            await connection.GetDatabase().StringSetAsync(cacheKey, newCount, TimeSpan.FromSeconds(rateLimit.Window));
+            return await connection.GetDatabase().StringSetAsync(cacheKey, newCount, TimeSpan.FromSeconds(rateLimit.Window));
         }
-        else // Set the initial count for this endpoint
-            await connection.GetDatabase().StringSetAsync(cacheKey, 1, TimeSpan.FromSeconds(rateLimit.Window));
-
-        return false;
+        
+        return await connection.GetDatabase().StringSetAsync(cacheKey, 1, TimeSpan.FromSeconds(rateLimit.Window)); // Set the initial count for this endpoint
     }
 
     private RateLimit? GetRateLimitForEndpoint(string endpoint)
