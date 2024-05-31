@@ -26,7 +26,7 @@ public class Program
             bool? isRateLimited = await redisRateLimitService.IsRequestRateLimitedAsync(context.Request.Path);
 
             if (isRateLimited == null)
-                return Results.Forbid();
+                return Results.StatusCode(403); // We haven't defined a rate limit for this endpoint in rate_limits.json
             else if (isRateLimited ?? false)
                 return Results.StatusCode(429);
             else
