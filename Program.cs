@@ -23,8 +23,8 @@ app.MapGet("{**endpoint}", async (HttpContext context, IRedisRateLimitService re
 		return Results.StatusCode(403); // We haven't defined a rate limit for this endpoint in rate_limits.json
 	else if (isRateLimited ?? false)
 		return Results.StatusCode(429);
-	else
-		return Results.Accepted();
+
+	return Results.Accepted();
 });
 
 app.Run();
