@@ -3,6 +3,7 @@ using RedisRateLimitAPI.Services;
 using StackExchange.Redis;
 
 WebApplicationBuilder? builder = WebApplication.CreateSlimBuilder(args);
+
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
 	options.SerializerOptions.TypeInfoResolverChain.Insert(0, SourceGenerationContext.Default);
