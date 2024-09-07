@@ -1,0 +1,25 @@
+{
+  "Endpoints": [
+    {
+      "Path": "/Preferences",
+      "RateLimit": {
+        "RequestLimit": 1,
+        "Window": 60
+      }
+    },
+    {
+      "Path": "/api/v1/resource2",
+      "RateLimit": {
+        "RequestLimit": 2,
+        "Window": 120
+      }
+    },
+    {
+      "Path": "/api/v1/resource3",
+      "RateLimit": {
+        "RequestLimit": 3,
+        "Window": 180
+      }
+    }
+  ]
+}
